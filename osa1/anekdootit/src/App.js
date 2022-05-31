@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -10,22 +11,39 @@ const App = () => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when dianosing patients.'
   ]
-   
+  const [points, setPoints] = useState(Array(anecdotes.length).fill(0));
   const [selected, setSelected] = useState(0)
-  const handleClick = () => {
-    setSelected(selected + 1)
+  const [mostvotes, setMostvotes] = useState(NaN)
+
+  const anecdoteClick = () => {
+    setSelected(Math.floor(Math.random() * anecdotes.length) )
+    
+  }
+  const voteClick = () => {
+    const pointsCopy = [...points]
+    pointsCopy[selected] += 1
+    setPoints(pointsCopy)
+    const max = Math.max(...pointsCopy)
+    const index = pointsCopy.indexOf(max)
+    setMostvotes(index)
+    console.log(pointsCopy)
+    
   }
   return (
     <div>
-      {anecdotes[selected]}
+      <h1>Anecdote of the day</h1>
+        {anecdotes[selected]}
       <div>
-        <button onClick={handleClick}>
-        Seuraava anekdootti
-        </button>
+        <button onClick={voteClick}>Vote</button>
+        <button onClick={anecdoteClick}>Seuraava anekdootti</button>
       </div>
-      
+      <h1>Anecdote with most votes</h1>
+        {anecdotes[mostvotes]}
     </div>
   )
 }
+
+
+
 
 export default App
