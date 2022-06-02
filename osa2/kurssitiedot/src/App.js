@@ -22,14 +22,19 @@ const App = () => {
   }
 
 const Course = ({course}) => {
-  console.log(course.name)
+  
   const parts = course.parts
+  const exercises = parts.map(part=> part.exercises)
+  const sumExercises = exercises.reduce((total, currentValue) => total = total + currentValue,0)
+  
+console.log(sumExercises);  // 600
+  console.log(exercises)
   return(
     <div>
-    <h1>{course.name}</h1>
+    <h1 key={course.id}>{course.name}</h1>
    
-    {parts.map(part => <li key={parts.id} style={{ listStyleType: "none" }}>{part.name} {part.exercises}</li>)}
-    
+    {parts.map(part => <li key={part.id} style={{ lineHeight: 2, listStyleType: "none" }}>{part.name} {part.exercises}{'\n'}</li>)}
+    <p><b>total of {sumExercises} exercises</b></p>
     </div>
   )
 }
