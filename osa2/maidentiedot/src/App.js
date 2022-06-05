@@ -6,6 +6,9 @@ const App = () => {
   const [countries, setCountries] = useState([])
   const [newFilter, setNewFilter] = useState('')
   const [showAll, setShowAll] = useState(true)
+  
+  ? countries.filter(country => country.name.toLowerCase().includes(newFilter.toLowerCase()))
+  : countries
   const hook = () => {
     console.log('effect')
     axios
@@ -16,10 +19,6 @@ const App = () => {
       })
   }
   useEffect(hook, [])
-  
-  console.log('render', countries.length, 'notes')
-  console.log(countries)
-  const countryNames = countries.map(country => country.name)
 
   const handleFilterChange = (event) => {
     setNewFilter(event.target.value)
@@ -28,16 +27,21 @@ const App = () => {
   const countriesToShow = showAll
     ? countries.filter(country => country.name.toLowerCase().includes(newFilter.toLowerCase()))
     : countries
-  console.log("countriestoshow", countriesToShow)
+
+  const showThisCountry = (country) => {
+    setNewFilter(country.name)
+  }
+
   if (countriesToShow.length>10){
     return(
       <div>
       <h1>Countries</h1>
       <Filter newFilter = {newFilter} handleFilterChange = {handleFilterChange} />
-      Too many matches, specify another filter
+        Too many matches, specify another filter
       </div>
       )
   }
+  
   if (countriesToShow.length===1){
     const country = countriesToShow[0]
     return(
@@ -48,21 +52,26 @@ const App = () => {
       </div>
       )
   }
+
   return (
     <div>
       <h1>Countries</h1>
       <Filter newFilter = {newFilter} handleFilterChange = {handleFilterChange} />
       <ul>
-      {countriesToShow.map(country => <Country country={country}/>)}
+      {countriesToShow.map(country =>  <Country country={country} showThisCountry={showThisCountry}/> 
+      )}
       </ul>
-     
     </div>
   )
 }
 
-const Country = ({country}) => {
+const Country = ({country,showThisCountry}) => {
   return(
-    <div>{country.name}</div>
+    <div>{country.name} 
+      <button onClick={() => showThisCountry(country)}>
+        show
+      </button>
+    </div>
   )
 }
 
@@ -75,8 +84,6 @@ const Singlecountry = ({country}) => {
     <br/>
     <div><b>languages:</b></div>
       <ul>{country.languages.map(language => <li> {language.name}</li>)}</ul>
-    
-    
     <img width={250} height={200}
       src={country.flag}
       alt="new"
