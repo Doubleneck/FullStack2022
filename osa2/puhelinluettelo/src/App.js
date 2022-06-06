@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -10,19 +10,14 @@ const App = () => {
   const [showAll, setShowAll] = useState(true)
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
         setPersons(response.data)
       })
   }, [])
 
-
-
-
   console.log('render', persons.length, 'notes')
-  
- 
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -33,14 +28,14 @@ const App = () => {
     if (personNames.includes(newName)){
       return alert(`${newName} is already added to phonebook`)
     }
-    axios
-      .post('http://localhost:3001/persons', personObject)
+    personService
+      .create(personObject)
       .then(response => {
-        console.log(response)
-      })
-    // setPersons(persons.concat(personObject))
-    setNewName('')
-    setNewNumber('')
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+    })
+    
   }
 
   const personNames = persons.map(person => person.name)
