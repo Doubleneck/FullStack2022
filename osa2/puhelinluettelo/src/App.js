@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import personService from './services/persons'
 
 const App = () => {
@@ -35,14 +34,24 @@ const App = () => {
         setNewName('')
         setNewNumber('')
     })
-    
   }
 
+  const removePerson = (event) => {
+    event.preventDefault()
+    const person =  persons.filter(person => person.id.toString() === event.target.value.toString())[0]
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService
+        .remove(event.target.value)
+        .then(() => {
+          setPersons(persons.filter(person => person.id.toString() !== event.target.value))
+      })
+    } 
+  }
   const personNames = persons.map(person => person.name)
   const personsToShow = showAll
     ? persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()))
     : persons
-    console.log(persons.filter(person => person.name.includes(newFilter.toLowerCase())))
+    // console.log(persons.filter(person => person.name.includes(newFilter.toLowerCase())))
 
 
   const handleNameChange = (event) => {
@@ -54,10 +63,8 @@ const App = () => {
   }
 
   const handleFilterChange = (event) => {
-    setNewFilter(event.target.value)
-    
+    setNewFilter(event.target.value)   
   }
-  
  
   return (
     <div>
@@ -67,21 +74,30 @@ const App = () => {
       < PersonForm addPerson={addPerson} newName = {newName }newNumber = {newNumber} handleNameChange={handleNameChange}
       handleNumberChange = {handleNumberChange}/>
       <h2>Numbers</h2>
-        <Persons personstoShow = {personsToShow} />
+      <ul>
+      <Persons personstoShow = {personsToShow} removePerson = {removePerson}/> 
+      </ul>
     </div>
   )
 }
 
-const Person = ({person}) => {
+const Person = ({person,removePerson}) => {
   return(
-    <div>{person.name} {person.number}</div>
+    <div>
+      {person.name} {person.number}    
+      <button value = {person.id} onClick={removePerson}>
+        delete 
+      </button>
+    </div>
   )
 }
 
-const Persons = ({personstoShow}) => {
+const Persons = ({personstoShow,removePerson}) => {
   return(
     <div>
-    {personstoShow.map(person => <ul style={{padding:0}} key={person.name}><Person person={person}/></ul>)} 
+    {personstoShow.map(person => <ul style={{padding:0}} key = {person.id}><Person person={person} removePerson={removePerson}
+    />
+    </ul>)} 
     </div>
   )
 }
