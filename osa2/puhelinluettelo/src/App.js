@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
+import './index.css'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -7,6 +8,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [showAll, setShowAll] = useState(true)
+  const [updateMessage, setUpdateMessage] = useState('qe')
 
   useEffect(() => {
     personService
@@ -26,21 +28,34 @@ const App = () => {
     }
     
     if (personNames.includes(newName)){
-      if (window.confirm(`${newName} is already added to phonebook, replace th old number with the new one?`)) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with the new one?`)) {
         const foundObject =persons.filter(person => person.name === newName)[0]
         console.log(foundObject.id)
         
         personService
           .update(foundObject.id,personObject)
            .then(response => {
+            setUpdateMessage(
+              `Added a new number ${newNumber} for ${newName} `
+            )
+            setTimeout(() => {
+              setUpdateMessage(null)
+            }, 5000)
             setPersons(persons.map(person => person.id !== foundObject.id ? person : response.data))
-         })
+            })
+           
       } 
       
     } else {
     personService
       .create(personObject)
       .then(response => {
+        setUpdateMessage(
+          `Added ${newName} `
+        )
+        setTimeout(() => {
+          setUpdateMessage(null)
+        }, 5000)
         setPersons(persons.concat(response.data))
         setNewName('')
         setNewNumber('')
@@ -55,6 +70,12 @@ const App = () => {
       personService
         .remove(event.target.value)
         .then(() => {
+          setUpdateMessage(
+            `Removed ${person.name} from phonebook `
+          )
+          setTimeout(() => {
+            setUpdateMessage(null)
+          }, 5000)
           setPersons(persons.filter(person => person.id.toString() !== event.target.value))
       })
     } 
@@ -64,7 +85,6 @@ const App = () => {
     ? persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()))
     : persons
     // console.log(persons.filter(person => person.name.includes(newFilter.toLowerCase())))
-
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -83,6 +103,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter newFilter = {newFilter} handleFilterChange = {handleFilterChange} />
       <h2>add a new</h2>
+      <Notification message={updateMessage} />
       < PersonForm addPerson={addPerson} newName = {newName }newNumber = {newNumber} handleNameChange={handleNameChange}
       handleNumberChange = {handleNumberChange}/>
       <h2>Numbers</h2>
@@ -129,6 +150,18 @@ const PersonForm = (props) => {
 const Filter = (props) => {
   return(
   <div> filter shown with: <input value={props.newFilter} onChange={props.handleFilterChange}/></div>
+  )
+}
+
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="update">
+      {message}
+    </div>
   )
 }
 
