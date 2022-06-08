@@ -24,16 +24,28 @@ const App = () => {
       name: newName,
       number: newNumber
     }
+    
     if (personNames.includes(newName)){
-      return alert(`${newName} is already added to phonebook`)
-    }
+      if (window.confirm(`${newName} is already added to phonebook, replace th old number with the new one?`)) {
+        const foundObject =persons.filter(person => person.name === newName)[0]
+        console.log(foundObject.id)
+        
+        personService
+          .update(foundObject.id,personObject)
+           .then(response => {
+            setPersons(persons.map(person => person.id !== foundObject.id ? person : response.data))
+         })
+      } 
+      
+    } else {
     personService
       .create(personObject)
       .then(response => {
         setPersons(persons.concat(response.data))
         setNewName('')
         setNewNumber('')
-    })
+      })
+    }
   }
 
   const removePerson = (event) => {
