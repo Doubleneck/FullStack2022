@@ -24,8 +24,12 @@ let persons = [
     }          
 ]
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>')
+app.get('/info', (req, res) => {
+    
+    const size = persons.length
+    const currentTimeInSeconds=new Date().toString()
+    console.log(currentTimeInSeconds)
+  res.send(`<div>Phonebook has info for ${size} people</div> ${currentTimeInSeconds} <div> </div>`)
 })
 
 app.get('/api/persons', (req, res) => {
