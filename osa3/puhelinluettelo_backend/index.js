@@ -14,7 +14,7 @@ let persons = [
     },    
     {
         id:3,
-        name: 'Dan Abramov', 
+        name: 'Dan Abramov',  
         number: '12-43-234345'
     },
     {
@@ -45,6 +45,13 @@ app.get('/api/persons/:id', (request, response) => {
         response.status(404).end()
       }
   })
+
+app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    persons = persons.filter(person => person.id !== id)
+  
+    response.status(204).end()
+})  
 
 const PORT = 3001
 app.listen(PORT, () => {
