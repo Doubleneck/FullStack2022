@@ -34,6 +34,7 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
+    
   res.json(persons)
 })
 
@@ -62,11 +63,20 @@ const generateId = () => {
 }
 app.post('/api/persons', (request, response) => {
     const body = request.body
+    names = persons.map(p => p.name)
+    
     if (!body.name || !body.number) {
         return response.status(400).json({ 
           error: 'name or number missing' 
         })
     }
+
+    if (names.includes(body.name)) {
+        return response.status(400).json({ 
+          error: 'name is already added to phonebook' 
+        })
+    }
+    
     const person = {
         name: body.name,
         number: body.number,
