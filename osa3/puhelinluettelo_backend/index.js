@@ -54,7 +54,6 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-    
   res.json(persons)
 })
 
@@ -69,11 +68,18 @@ app.get('/api/persons/:id', (request, response) => {
   })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    persons = persons.filter(person => person.id !== id)
   
-    response.status(204).end()
-})  
+    const id = Number(request.params.id)
+    const personids = persons.map(person => person.id)
+    if (personids.includes(id)){
+      persons = persons.filter(person => person.id !== id)
+      response.status(204).end()
+    } else{
+      response.status(404).send({ error: 'unknown endpoint' })
+    }
+    
+})
+
 const generateId = () => {
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
@@ -90,13 +96,11 @@ app.post('/api/persons', (request, response) => {
           error: 'name or number missing' 
         })
     }
-
     if (names.includes(body.name)) {
         return response.status(400).json({ 
           error: 'name is already added to phonebook' 
         })
     }
-    
     const person = {
         name: body.name,
         number: body.number,
@@ -105,6 +109,25 @@ app.post('/api/persons', (request, response) => {
     persons = persons.concat(person)
     // console.log(person)
     response.json(person)
+  })
+ 
+  app.put('/api/persons/:id', (request, response) => {  
+    const id = Number(request.params.id)
+    const personids = persons.map(person => person.id)
+    if (personids.includes(id)){
+      const body = request.body
+      console.log('request body', body)
+      const newPerson = {
+          name: body.name,
+          number: body.number,
+          id:id
+        }    
+      persons = persons.map(person => person.id !== id ? person : newPerson)
+      console.log('new person', newPerson)
+      response.json(newPerson)
+    } else {
+      response.status(404).send({ error: 'unknown endpoint' })
+    }
   })
  
   const unknownEndpoint = (request, response) => {
