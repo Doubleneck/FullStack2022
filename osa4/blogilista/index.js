@@ -1,10 +1,7 @@
+require('dotenv').config()
 const http = require('http')
 const express = require('express')
 const app = express()
-/* const app = http.createServer((request, response) => {
-    response.writeHead(200, { 'Content-Type': 'text/plain' })
-    response.end('Hello World')
-  }) */
 const cors = require('cors')
 const mongoose = require('mongoose')
 
@@ -17,20 +14,20 @@ const blogSchema = mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema)
 
-const mongoUrl = 'mongodb://localhost/bloglist'
+const mongoUrl = process.env.MONGODB_URI //'mongodb://localhost/bloglist'
 mongoose.connect(mongoUrl)
 
 app.use(cors())
 app.use(express.json())
 
 app.get('/api/blogs', (request, response) => {
-/*   Blog
+  Blog
     .find({})
     .then(blogs => {
       response.json(blogs)
-    }) */
-    response.writeHead(200, { 'Content-Type': 'text/plain' })
-    response.end('Hello World')
+    })
+/*     response.writeHead(200, { 'Content-Type': 'text/plain' })
+    response.end('Hello World') */
 })
 
 app.post('/api/blogs', (request, response) => {

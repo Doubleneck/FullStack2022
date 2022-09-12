@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
-
+require('dotenv').config()
 // ÄLÄ KOSKAAN TALLETA SALASANOJA GitHubiin!
-const url =
-  `mongodb+srv://fullstack:<password>@cluster0.o1opl.mongodb.net/noteApp?retryWrites=true&w=majority`
+const url = process.env.MONGODB_URI
+  
 
 mongoose.connect(url)
 
@@ -22,7 +22,7 @@ const blog = new Blog({
     likes: 10
   })
 
-  note.save().then(result => {
-    console.log('note saved!')
+  blog.save().then(result => {
+    console.log('blog saved!')
     mongoose.connection.close()
   })  
