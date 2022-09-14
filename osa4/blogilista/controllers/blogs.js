@@ -1,6 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const logger = require('../utils/logger')
+
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({})  
@@ -9,7 +9,7 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
   let body = request.body
-//  logger.info(body.title !== undefined && body.url !== undefined)
+
   if (body.likes === undefined){
     body.likes = 0
   }
