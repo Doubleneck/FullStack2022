@@ -98,6 +98,37 @@ describe('blog api tests', () => {
   
   })
 
+  test('get request with a valid id returns a blog', async () => {
+    const blogsAtEnd = await helper.blogsInDb()
+    const ids = blogsAtEnd.map(b => b.id)
+    const firstBlogInDbId = ids[0]
+    await api
+      .get('/api/blogs/'+`${firstBlogInDbId}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  test('put request with a valid id updates likes', async () => {
+    const blogsAtEnd = await helper.blogsInDb()
+    const ids = blogsAtEnd.map(b => b.id)
+    const firstBlogInDbId = ids[0]
+
+    const newBlog = {
+      title: 'testiblogi lisätty',
+      author: 'Mr Tester',
+      url: 'www.google.com',
+      likes:1000
+    }
+    await api
+      .put('/api/blogs/'+`${firstBlogInDbId}`)
+      .send(newBlog)
+      .expect(204)
+    
+    const blogsAtEnd2 = await helper.blogsInDb()
+    const likes = blogsAtEnd2.map(b => b.likes)  
+    expect(likes).toContain(1000)  
+  })
+
   test('there is the field  id blog', async() => {
     const blogsAtEnd = await helper.blogsInDb()
     const firstblock = blogsAtEnd[0]
