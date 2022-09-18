@@ -1,15 +1,8 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-/* const tokenExtractor = require('../utils/middleware') */
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
-/* const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7)
-  }
-  return null
-} */
+
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 }) 
@@ -19,10 +12,7 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
   let body = request.body
   
-  const token = request.token //getTokenFrom(request)
-  /*  const token = tokenExtractor(request) */
-
-  console.log('token: ', token)
+  const token = request.token 
   const decodedToken = jwt.verify(token, process.env.SECRET)
   if (!token || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' })
@@ -51,18 +41,27 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.get('/:id', async (request, response,) => {
-
-  const note = await Blog.findById(request.params.id)
-  if (note) {
-    response.json(note)
+  
+  const blog = await Blog.findById(request.params.id)
+  if (blog) {
+    response.json(blog)
   } else {
-    response.status(404).end()
+    response.status(404).json({error: `Blog not found with id ${request.params.id}`})
   }  
-})
+})  
+
 
 blogsRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndRemove(request.params.id)
-  response.status(204).end()
+  
+  const blog = await Blog.findById(request.params.id)
+  if (!blog) {return response.status(404).json({error: `Blog not found with id ${request.params.id}`})}
+  const tokenDecoded = jwt.verify(request.token, process.env.SECRET)
+  if (blog.user.toString() === tokenDecoded.id){
+    await Blog.findByIdAndRemove(request.params.id)
+    response.status(204).end()
+  } else {
+    response.status(400).json({error: `Not allowed to delete , not created by user with id : ${tokenDecoded.id}`}) 
+  }
 } 
 )
 
