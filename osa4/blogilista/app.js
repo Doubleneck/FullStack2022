@@ -11,7 +11,6 @@ const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 const middleware = require('./utils/middleware')
 
-
 mongoose.connect(config.MONGODB_URI )
   .then(() => {
     logger.info('connected to MongoDB')
