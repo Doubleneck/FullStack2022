@@ -1,5 +1,6 @@
 const logger = require('./logger')
 const jwt = require('jsonwebtoken')
+const { get, post } = require('superagent')
 
 const requestLogger = (request, response, next) => {
   logger.info('Method:', request.method)
@@ -36,7 +37,6 @@ const tokenExtractor = (request, response, next) => {
   const authorization = request.get('authorization')
  
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    console.log('kukkuu')
     request.token = authorization.substring(7)
   } else {
     request.token = null
@@ -45,7 +45,8 @@ const tokenExtractor = (request, response, next) => {
 }
 
 const userExtractor = (request, response, next) => {
-  if(request.path != '/api/login') {
+ 
+  if(!request.method === get) {
     const tokenDecoded = jwt.verify(request.token, process.env.SECRET)
     request.user = {
       username : tokenDecoded.username,
