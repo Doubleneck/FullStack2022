@@ -21,12 +21,12 @@ const create = async newObject => {
   const config = {
     headers: { Authorization: token },
   }
+  console.log('create',newObject.title)
   const newBlog = {
-    title: newObject.newBlogTitle,
-    author: newObject.newBlogAuthor,
-    url: newObject.newBlogUrl
+    title: newObject.title,
+    author: newObject.author,
+    url: newObject.url
   }
-  console.log(newBlog)
   const response = await axios.post(baseUrl, newBlog, config)
   return response.data
 }
