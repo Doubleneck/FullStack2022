@@ -23,7 +23,6 @@ const App = () => {
     </Togglable>
   )
 
-
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
     const showWhenVisible = { display: loginVisible ? '' : 'none' }
@@ -47,7 +46,7 @@ const App = () => {
     )
   }
 
-  const addBlog = (blogObject) => {
+  const addBlog = (blogObject) => { 
     blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
@@ -58,7 +57,50 @@ const App = () => {
         }, 5000)
         setBlogs(blogs.concat(returnedBlog))
         }) 
+      .catch((error) => {
+        error('something went wrong while trying to add a new blog', error.message)
+      })  
   }
+
+  const handleDeleteBlog = async (blog) => { 
+    if (window.confirm(` Remove blog ${blog.title}  by ${blog.author} ?`)){
+     try {
+      await blogService.remove(blog.id)
+      setUpdateMessage(`Removing ${blog.title} by ${blog.author} succeed!`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      setBlogs(blogs.filter(b => b.id !== blog.id)) 
+    } catch {
+      setErrorMessage(`Error while trying to remove ${blog.title} by ${blog.author}`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+   }
+  }
+
+  const handleUpdateBlog = async (id, blog) => {
+    const blogObject = {
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      user: blog.user,
+      likes: blog.likes,
+      id: id
+    }
+    try {
+      await blogService.update(id, blog)
+      setBlogs(blogs.map(b => b.id !== id ? b: blogObject)) 
+      
+    } catch (expection) {
+      setErrorMessage('Error while trying to like')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
 
   const handleLogout = async (event) =>{
     event.preventDefault()
@@ -87,10 +129,12 @@ const App = () => {
     }
   }
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+    blogService.getAll()
+      .then(blogs => setBlogs( blogs.sort((a, b) => a.likes - b.likes) )
     )  
   }, [])
+
+
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -117,7 +161,8 @@ const App = () => {
       }
       <h2>Blogs</h2>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleUpdateBlog={handleUpdateBlog} handleDeleteBlog={handleDeleteBlog}/>
+       
       )}
     </div>
   )
