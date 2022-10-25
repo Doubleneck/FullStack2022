@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog }) => {
+const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog,  }) => {
   const [showAll, setShowAll] = useState(false)
   const user = JSON.parse(window.localStorage.getItem('loggedBlogappUser')) || null
 
@@ -20,7 +20,8 @@ const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog }) => {
       author: blog.author,
       url: blog.url,
       user: blog.user,
-      likes: blog.likes + 1
+      likes: blog.likes + 1,
+      
     }
     handleUpdateBlog(blog.id,blogObject)
   }
@@ -28,13 +29,13 @@ const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog }) => {
     handleDeleteBlog(blog)
   }
 
+
   return (
     <div style={blogStyle}>
-      <span onClick={showAllDetails} ><mark>{blog.title}</mark>   </span> {blog.author}
-
+      <span onClick={showAllDetails} ><mark>{blog.title}</mark></span> {blog.author}
       {showAll? (
         <div>
-          <div>likes {blog.likes} <button onClick={handleAddLike}> like </button></div>
+          <div>likes {blog.likes} <button onClick={handleAddLike}>like</button></div>
           <div>{blog.url}</div>
           <div>{blog.user.name}</div>
           <button onClick={hideSomeDetails} > hide </button>
