@@ -1,9 +1,9 @@
-import { useState } from 'react' 
+import { useState } from 'react'
 
-const Blog = ({blog, handleUpdateBlog, handleDeleteBlog}) => {
+const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog }) => {
   const [showAll, setShowAll] = useState(false)
   const user = JSON.parse(window.localStorage.getItem('loggedBlogappUser')) || null
-  
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -15,7 +15,7 @@ const Blog = ({blog, handleUpdateBlog, handleDeleteBlog}) => {
   const showAllDetails = () => setShowAll(true)
   const hideSomeDetails = () => setShowAll(false)
   const handleAddLike = () => {
-  const blogObject = {
+    const blogObject = {
       title: blog.title,
       author: blog.author,
       url: blog.url,
@@ -24,35 +24,30 @@ const Blog = ({blog, handleUpdateBlog, handleDeleteBlog}) => {
     }
     handleUpdateBlog(blog.id,blogObject)
   }
-  const handleDelete = () =>{
-   handleDeleteBlog(blog)
+  const handleDelete = () => {
+    handleDeleteBlog(blog)
   }
 
   return (
+    <div style={blogStyle}>
+      <span onClick={showAllDetails} ><mark>{blog.title}</mark>   </span> {blog.author}
 
-  <div style={blogStyle}>
-
-        <span onClick={showAllDetails} ><mark>{blog.title}</mark>   </span> {blog.author}
-        
-         {showAll? (
+      {showAll? (
         <div>
           <div>likes {blog.likes} <button onClick={handleAddLike}> like </button></div>
           <div>{blog.url}</div>
           <div>{blog.user.name}</div>
-          
           <button onClick={hideSomeDetails} > hide </button>
-          
           {user  && blog.user.username === user.username ?
-          <div>< button style = {{color:"red"}} onClick={handleDelete}> delete </button></div>
-          :
-          <div></div>
-        }
-        </div>  
-          ) : (
-          <div></div>
-      
-        )}    
-  </div>  
-)}
+            <div>< button style = {{ color:'red' }} onClick={handleDelete}> delete </button></div>
+            :
+            <div></div>
+          }
+        </div>
+      ) : (
+        <div></div>
+      )}
+    </div>
+  )}
 
 export default Blog

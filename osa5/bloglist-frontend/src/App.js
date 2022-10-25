@@ -9,8 +9,8 @@ import './index.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [updateMessage, setUpdateMessage] = useState(null)
   const [user, setUser] = useState(null)
@@ -46,38 +46,38 @@ const App = () => {
     )
   }
 
-  const addBlog = (blogObject) => { 
+  const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
       .then(returnedBlog => {
         setUpdateMessage(`A new blog ${blogObject.title} by ${blogObject.author} added `)
         setTimeout(() => {
-        setUpdateMessage(null)
+          setUpdateMessage(null)
         }, 5000)
         setBlogs(blogs.concat(returnedBlog))
-        }) 
+      })
       .catch((error) => {
         error('something went wrong while trying to add a new blog', error.message)
-      })  
+      })
   }
 
-  const handleDeleteBlog = async (blog) => { 
+  const handleDeleteBlog = async (blog) => {
     if (window.confirm(` Remove blog ${blog.title}  by ${blog.author} ?`)){
-     try {
-      await blogService.remove(blog.id)
-      setUpdateMessage(`Removing ${blog.title} by ${blog.author} succeed!`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-      setBlogs(blogs.filter(b => b.id !== blog.id)) 
-    } catch {
-      setErrorMessage(`Error while trying to remove ${blog.title} by ${blog.author}`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      try {
+        await blogService.remove(blog.id)
+        setUpdateMessage(`Removing ${blog.title} by ${blog.author} succeed!`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+      } catch {
+        setErrorMessage(`Error while trying to remove ${blog.title} by ${blog.author}`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      }
     }
-   }
   }
 
   const handleUpdateBlog = async (id, blog) => {
@@ -91,8 +91,8 @@ const App = () => {
     }
     try {
       await blogService.update(id, blog)
-      setBlogs(blogs.map(b => b.id !== id ? b: blogObject)) 
-      
+      setBlogs(blogs.map(b => b.id !== id ? b: blogObject))
+
     } catch (expection) {
       setErrorMessage('Error while trying to like')
       setTimeout(() => {
@@ -101,8 +101,7 @@ const App = () => {
     }
   }
 
-
-  const handleLogout = async (event) =>{
+  const handleLogout = async (event) => {
     event.preventDefault()
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
@@ -131,10 +130,8 @@ const App = () => {
   useEffect(() => {
     blogService.getAll()
       .then(blogs => setBlogs( blogs.sort((a, b) => a.likes - b.likes) )
-    )  
+      )
   }, [])
-
-
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -150,19 +147,17 @@ const App = () => {
       < SuccessNotification message = {updateMessage} />
       < ErrorNotification message = {errorMessage} />
       {user === null ?
-      <div>
-        {loginForm()}
-      </div>  :
-      <div>
-        <p>{user.name} logged in <button onClick={handleLogout} > logout </button></p>
-
-        {blogForm()}
-      </div>
+        <div>
+          {loginForm()}
+        </div>  :
+        <div>
+          <p>{user.name} logged in <button onClick={handleLogout} > logout </button></p>
+          {blogForm()}
+        </div>
       }
       <h2>Blogs</h2>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} handleUpdateBlog={handleUpdateBlog} handleDeleteBlog={handleDeleteBlog}/>
-       
       )}
     </div>
   )
