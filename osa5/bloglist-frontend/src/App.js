@@ -68,7 +68,7 @@ const App = () => {
         await blogService.remove(blog.id)
         setUpdateMessage(`Removing ${blog.title} by ${blog.author} succeed!`)
         setTimeout(() => {
-          setErrorMessage(null)
+          setUpdateMessage(null)
         }, 5000)
         setBlogs(blogs.filter(b => b.id !== blog.id))
       } catch {
@@ -129,7 +129,7 @@ const App = () => {
   }
   useEffect(() => {
     blogService.getAll()
-      .then(blogs => setBlogs( blogs.sort((a, b) => a.likes - b.likes) )
+      .then(blogs => setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
       )
   }, [])
 
@@ -151,7 +151,7 @@ const App = () => {
           {loginForm()}
         </div>  :
         <div>
-          <p>{user.name} logged in <button onClick={handleLogout} > logout </button></p>
+          <p>{user.name} logged in <button onClick={handleLogout} id='logout'> logout </button></p>
           {blogForm()}
         </div>
       }
