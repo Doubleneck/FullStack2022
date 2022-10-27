@@ -29,7 +29,7 @@ export const toggleVoteOf = (id) => {
 export const createAnecdote = (event) => {
   event.preventDefault()
   const content = event.target.anecdote.value
-  console.log(event.target.anecdote.value)
+  /* console.log(event.target.anecdote.value) */
   event.target.anecdote.value = ''
   return {
     type: 'CREATE',
