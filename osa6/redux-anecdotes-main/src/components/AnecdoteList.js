@@ -1,17 +1,23 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { toggleVoteOf }from '../reducers/anecdoteReducer'
+import  { toggleVoteOf } from '../reducers/anecdoteReducer'
+import  { voteNotification, clearNotification } from '../reducers/notificationReducer'
 
-const AnecdoteList = () =>{
+const Anecdotes = () =>{
 
-    const anecdotesFromSelector = useSelector(state => state)
-    const anecdotes = anecdotesFromSelector.sort((a, b) => b.votes - a.votes)
+    const anecdotes = useSelector(state => state.anecdotes)
     const dispatch = useDispatch()
-    const vote = (id) => {
-      dispatch(toggleVoteOf(id))
+
+    const vote = (anecdote) => {
+        dispatch(toggleVoteOf(anecdote.id))  
+        dispatch(voteNotification(anecdote)) 
+        setTimeout(() => {
+            dispatch(clearNotification(anecdote)) 
+        }, 5000)
     }
 
   return (
     <div>
+    
     <h2>Anecdotes</h2>
     {anecdotes.map(anecdote =>
     <div key={anecdote.id}>
@@ -20,7 +26,7 @@ const AnecdoteList = () =>{
       </div>
       <div>
       has {anecdote.votes}
-      <button onClick={() => vote(anecdote.id)}>vote</button>
+      <button onClick={() => vote(anecdote)}>vote</button>
        </div>
     </div>
     )}
@@ -28,4 +34,4 @@ const AnecdoteList = () =>{
   )
 }
 
-export default AnecdoteList
+export default Anecdotes
