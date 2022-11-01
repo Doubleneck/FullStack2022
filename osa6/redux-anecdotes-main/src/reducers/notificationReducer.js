@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = ''
+const initialState = {}
 
 const notificationSlice = createSlice({
     name: 'notification',
@@ -8,7 +8,13 @@ const notificationSlice = createSlice({
     reducers: {
 
       createNotification (state, action) {
-        return action.payload
+        if (state.timeout){
+          console.log('timeout löytyy:',state.timeout)
+          clearTimeout(state.timeout)
+        } 
+        state.content = action.payload.content
+        state.timeout = action.payload.timeoutID
+        return state
       },
       clearNotification (state, action) {
         
@@ -21,10 +27,16 @@ const notificationSlice = createSlice({
   export const setNotification = (content,time) => {  
         const ms = time * 1000
         return async dispatch => {
-          dispatch(createNotification(content)) 
+          
           const timeoutID = setTimeout(() => {
             dispatch(clearNotification())
           }, ms)
+          const notification ={
+            content: content,
+            timeoutID, timeoutID
+          }
+          dispatch(createNotification(notification)) 
+
         
     }
   } 

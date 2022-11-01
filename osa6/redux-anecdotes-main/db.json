@@ -2,22 +2,22 @@
   "anecdotes": [
     {
       "content": "First anecdote",
-      "votes": 140,
+      "votes": 191,
       "id": 1
     },
     {
       "content": "Second anecdote",
-      "votes": 28,
+      "votes": 30,
       "id": 2
     },
     {
       "content": "\"olipa kerran mies\"",
-      "votes": 6,
+      "votes": 8,
       "id": 6
     },
     {
       "content": "Testataan",
-      "votes": 2,
+      "votes": 4,
       "id": 7
     },
     {
@@ -37,7 +37,7 @@
     },
     {
       "content": "Uusi anekdootti",
-      "votes": 14,
+      "votes": 16,
       "id": 14
     },
     {
@@ -47,13 +47,33 @@
     },
     {
       "content": "olipa kerran avaruus",
-      "votes": 3,
+      "votes": 5,
       "id": 16
     },
     {
       "content": "123",
       "votes": 2,
       "id": 17
+    },
+    {
+      "content": "123",
+      "votes": 5,
+      "id": 18
+    },
+    {
+      "content": "123",
+      "votes": 0,
+      "id": 19
+    },
+    {
+      "content": "12",
+      "votes": 0,
+      "id": 20
+    },
+    {
+      "content": "anee",
+      "votes": 0,
+      "id": 21
     }
   ]
 }

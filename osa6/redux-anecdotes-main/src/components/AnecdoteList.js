@@ -1,16 +1,16 @@
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import  { addLikeToAnecdote } from '../reducers/anecdoteReducer'
 import  { setNotification } from '../reducers/notificationReducer'
 
-const Anecdotes = () =>{
-    
-    let filterText = useSelector(state => state.filter).filter
-    console.log('anecdotes',filterText)
-    if (!filterText){
-      filterText = ''
-    }
-    const anecdotes =  useSelector(state => state.anecdotes.filter(anecdote => anecdote.content.includes(filterText))) 
-   
+const Anecdotes = (props) =>{
+
+   let filterText = props.filter.filter
+   console.log('filsu', filterText)
+   if (!filterText){
+    filterText = ''
+  } 
+   const anecdotes = props.anecdotes.filter(anecdote => anecdote.content.includes(filterText))
    
     const dispatch = useDispatch()
     const vote = (anecdote) => {
@@ -36,5 +36,12 @@ const Anecdotes = () =>{
     </div>
   )
 }
+const mapStateToProps = (state) => {
+  return {
+    anecdotes: state.anecdotes,
+    filter: state.filter
+  }
+}
 
-export default Anecdotes
+const ConnectedAnecdotes = connect(mapStateToProps)(Anecdotes)
+export default ConnectedAnecdotes

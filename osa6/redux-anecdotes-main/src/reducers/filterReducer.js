@@ -6,7 +6,6 @@ const filterSlice = createSlice({
     reducers: {
       newFilter(state, action) {
        state.filter = action.payload
-        console.log(action.payload) 
        return state
       }
     },
@@ -14,7 +13,6 @@ const filterSlice = createSlice({
   
   export const setFilter= filterText => {
     return async dispatch => {
-      console.log(filterText)
       dispatch(newFilter(filterText))
     }
   }
