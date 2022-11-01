@@ -27,8 +27,6 @@ const anecdoteSlice = createSlice({
     setAnecdotes(state, action) {
       return action.payload
     },
-   
-  
   },
 })
 
@@ -52,8 +50,6 @@ export const addLikeToAnecdote = anecdote => {
     dispatch(toggleVoteOf(newAnecdote))
   }
 }
-
-
 
 export const { newAnecdote, toggleVoteOf ,appendAnecdote, setAnecdotes} = anecdoteSlice.actions
 export default anecdoteSlice.reducer
