@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import  { useField, useClearField } from './hooks'
 import {
   BrowserRouter as Router,
   Routes, Route, Link,useParams,useNavigate
@@ -96,65 +97,66 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  
+  let content = useField('content')
+  const author = useField('author')
+  const info = useField('info')
   const navigate = useNavigate();
   const anecdotes = props.anecdotes
   const setAnecdotes = props.setAnecdotes
   const setNotificationMessage = props.setNotificationMessage
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+ 
 
   const handleSubmit = (e) => {
     e.preventDefault()
     addNew({
-      content:content,
-      author:author,
-      info:info,
+      content:content.value,
+      author:author.value,
+      info:info.value,
       votes: 0
     })
   }
-
+  const handleClear= (e) => {
+    e.preventDefault()
+    content.clear()
+    author.clear()
+    info.clear()
+  }
+ 
   const addNew = (anecdote) => {
-     
-    anecdote.id = Math.round(Math.random() * 10000)
-    setAnecdotes(anecdotes.concat(anecdote)) 
-    setNotificationMessage(
+
+    if (anecdote.content !== '' && anecdote.author !== '' && anecdote.info !== '' ){
+      anecdote.id = Math.round(Math.random() * 10000)
+      setAnecdotes(anecdotes.concat(anecdote)) 
+      setNotificationMessage(
       `A new anecdote ${anecdote.content} created!`
     )
     setTimeout(() => {
       setNotificationMessage(null)
     }, 5000)
-    navigate('/anecdotes');
+    navigate('/anecdotes')
+  }
     
   } 
-
-/*  const vote = (id) => {
-    const anecdote = anecdoteById(id)
-
-    const voted = {
-      ...anecdote,
-      votes: anecdote.votes + 1
-    } */
 
   return (
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+        content: 
+        <input  {...content} clear/>
+        <br/> 
+        author:
+        <input {...author} clear/>
+        <br /> 
+        info:
+        <input {...info} clear/>
+      
         </div>
-        <div>
-          author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
-        </div>
-        <div>
-          url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
-        </div>
-        <button>create</button>
+       
+        <button>create</button><button onClick={handleClear}>reset</button>
       </form>
+      
     </div>
   )
 }
@@ -182,3 +184,11 @@ const App = () => {
 }
 
 export default App
+
+/*  const vote = (id) => {
+    const anecdote = anecdoteById(id)
+
+    const voted = {
+      ...anecdote,
+      votes: anecdote.votes + 1
+    } */
