@@ -1,13 +1,13 @@
 
 
   h2 {
-    color: green;
+    color: rgb(2, 2, 2);
   }
 
   ul {
-    color: grey;
+    color: rgb(9, 9, 9);
     padding-top: 3px;
-    font-size: 15px;
+    font-size: 18px;
   }
 
   .update {

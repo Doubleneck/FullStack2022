@@ -11,6 +11,7 @@ import './index.css'
 import store from './store'
 import Blogs from './components/Blogs'
 import Users from './components/Users'
+import User from './components/User'
 import { setNotification } from './reducers/notificationReducer'
 import { setBlogs } from './reducers/blogsReducer'
 import { setUsers } from './reducers/usersReducer'
@@ -29,8 +30,16 @@ const App = () => {
   const username = useSelector((state) => state.loginForm.username)
   const password = useSelector((state) => state.loginForm.password)
   const user = useSelector((state) => state.loginForm.user)
+  const users = useSelector((state) => state.users)
+  /*  console.log(users) */
   const [loginVisible, setLoginVisible] = useState(false)
   const blogFormRef = useRef()
+  const Home = () => (
+    <div>
+      {' '}
+      <h2>TKTL Andy`s Blog app</h2>{' '}
+    </div>
+  )
 
   const blogForm = () => (
     <Togglable buttonLabel="new blog" ref={blogFormRef}>
@@ -141,9 +150,10 @@ const App = () => {
         )}
 
         <Routes>
-          {/*  <Route path="/" element={<Home />} /> */}
+          <Route path="/" element={<Home />} />
           <Route path="/blogs" element={<Blogs />} />
-          <Route path="/users" element={<Users />} />
+          <Route path="/users" element={<Users users={users} Link={Link} />} />
+          <Route path="/users/:id" element={<User users={users} />} />
         </Routes>
 
         <div>
