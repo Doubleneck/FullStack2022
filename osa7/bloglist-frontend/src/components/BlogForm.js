@@ -1,38 +1,58 @@
-import { useState } from 'react'
-/* import { useDispatch } from 'react-redux' */
+import store from '../store'
 
-const BlogForm = ({ createBlog }) => {
-  const [newBlogTitle, setNewBlogTitle] = useState('')
-  const [newBlogAuthor, setNewBlogAuthor] = useState('')
-  const [newBlogUrl, setNewBlogUrl] = useState('')
+import { setBlogForm } from '../reducers/blogFormReducer'
+import { useSelector } from 'react-redux'
+import { appendBlog } from '../reducers/blogsReducer'
+import { setNotification } from '../reducers/notificationReducer'
+import blogService from '../services/blogs'
+
+const createBlog = (blogObject) => {
+  blogService
+    .create(blogObject)
+    .then((returnedBlog) => {
+      store.dispatch(
+        setNotification(
+          `A new blog ${returnedBlog.title} by ${returnedBlog.author} added `,
+          3,
+          'update'
+        )
+      )
+      store.dispatch(appendBlog(returnedBlog))
+    })
+    .catch((error) => {
+      store.dispatch(setNotification(error.message, 3, 'error'))
+    })
+}
+const BlogForm = () => {
+  const newBlogTitle = useSelector((state) => state.blogForm.newBlogTitle)
+  const newBlogAuthor = useSelector((state) => state.blogForm.newBlogAuthor)
+  const newBlogUrl = useSelector((state) => state.blogForm.newBlogUrl)
   const handleBlogTitleChange = (event) => {
-    setNewBlogTitle(event.target.value)
+    store.dispatch(setBlogForm(event.target.value, 'title'))
+    console.log('store blogform ', store.getState())
   }
   const handleBlogAuthorChange = (event) => {
-    setNewBlogAuthor(event.target.value)
+    store.dispatch(setBlogForm(event.target.value, 'author'))
   }
   const handleBlogUrlChange = (event) => {
-    setNewBlogUrl(event.target.value)
+    store.dispatch(setBlogForm(event.target.value, 'url'))
   }
 
-  const addBlog = (event) => {
+  const onSubmit = (event) => {
     console.log('blogformissa:', newBlogTitle, newBlogAuthor, newBlogUrl)
-    /*     const dispatch = useDispatch() */
     event.preventDefault()
     createBlog({
       title: newBlogTitle,
       author: newBlogAuthor,
       url: newBlogUrl,
     })
-    setNewBlogTitle('')
-    setNewBlogAuthor('')
-    setNewBlogUrl('')
+    store.dispatch(setBlogForm('', 'clear'))
   }
 
   return (
     <div>
       <h2>Create a new blog</h2>
-      <form onSubmit={addBlog}>
+      <form onSubmit={onSubmit}>
         <div>
           title
           <input

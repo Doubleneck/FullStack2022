@@ -18,7 +18,7 @@ const create = async (newObject) => {
       Authorization: token,
     },
   }
-  console.log('create', newObject.title)
+
   const newBlog = {
     title: newObject.title,
     author: newObject.author,
