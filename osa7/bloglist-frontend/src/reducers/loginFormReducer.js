@@ -20,7 +20,6 @@ const loginFormSlice = createSlice({
     },
 
     setUser(state, action) {
-      console.log('setuserissa:', action.payload)
       state.user = action.payload
       return state
     },

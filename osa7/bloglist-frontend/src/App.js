@@ -15,12 +15,13 @@ import {
   setPasswordInStore,
   setUsernameInStore,
   resetCredentials,
+  setUser,
 } from './reducers/loginFormReducer'
 
 const App = () => {
   const username = useSelector((state) => state.loginForm.username)
   const password = useSelector((state) => state.loginForm.password)
-  const [user, setUser] = useState(null)
+  const user = useSelector((state) => state.loginForm.user)
   const [loginVisible, setLoginVisible] = useState(false)
   const blogFormRef = useRef()
 
@@ -62,7 +63,7 @@ const App = () => {
   const handleLogout = async (event) => {
     event.preventDefault()
     window.localStorage.removeItem('loggedBlogappUser')
-    setUser(null)
+    store.dispatch(setUser(null))
   }
 
   const handleLogin = async (event) => {
@@ -74,8 +75,8 @@ const App = () => {
       })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
-      setUser(user)
       store.dispatch(resetCredentials())
+      store.dispatch(setUser(user))
     } catch (exception) {
       store.dispatch(setNotification('Wrong credentials', 3, 'error'))
     }
