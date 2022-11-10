@@ -5,12 +5,16 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
+import userService from './services/users'
 import loginService from './services/login'
 import './index.css'
 import store from './store'
 import Blogs from './components/Blogs'
+import Users from './components/Users'
 import { setNotification } from './reducers/notificationReducer'
 import { setBlogs } from './reducers/blogsReducer'
+import { setUsers } from './reducers/usersReducer'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import {
   setPasswordInStore,
   setUsernameInStore,
@@ -19,6 +23,9 @@ import {
 } from './reducers/loginFormReducer'
 
 const App = () => {
+  const padding = {
+    padding: 5,
+  }
   const username = useSelector((state) => state.loginForm.username)
   const password = useSelector((state) => state.loginForm.password)
   const user = useSelector((state) => state.loginForm.user)
@@ -90,6 +97,14 @@ const App = () => {
   }, [])
 
   useEffect(() => {
+    userService
+      .getAll()
+      .then((users) =>
+        store.dispatch(setUsers(users.sort((a, b) => b.username - a.username)))
+      )
+  }, [])
+
+  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -100,24 +115,45 @@ const App = () => {
 
   return (
     <div>
-      <Notification />
-      {user === null ? (
-        <div>{loginForm()}</div>
-      ) : (
-        <div>
-          <p>
+      <Router>
+        <Link style={padding} to="/">
+          home
+        </Link>
+        <Link style={padding} to="/blogs">
+          blogs
+        </Link>
+        <Link style={padding} to="/users">
+          users
+        </Link>
+
+        <Notification />
+        {user === null ? (
+          <div>{loginForm()}</div>
+        ) : (
+          <div>
             {user.name} logged in{' '}
             <button onClick={handleLogout} id="logout">
               {' '}
               logout{' '}
             </button>
-          </p>
-          {blogForm()}
-        </div>
-      )}
-      <h2>Blogs</h2>
+            {blogForm()}
+          </div>
+        )}
 
-      <Blogs />
+        <Routes>
+          {/*  <Route path="/" element={<Home />} /> */}
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/users" element={<Users />} />
+        </Routes>
+
+        <div>
+          <i>Note app, Department of Computer Science 2022</i>
+        </div>
+      </Router>
+
+      {/* <h2>Blogs</h2> */}
+
+      {/*  <Blogs /> */}
     </div>
   )
 }
