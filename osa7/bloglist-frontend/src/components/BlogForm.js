@@ -1,4 +1,5 @@
 import store from '../store'
+import Button from 'react-bootstrap/Button'
 
 import { setBlogForm } from '../reducers/blogFormReducer'
 import { useSelector } from 'react-redux'
@@ -50,44 +51,57 @@ const BlogForm = () => {
   }
 
   return (
-    <div>
-      <h2>Create a new blog</h2>
-      <form onSubmit={onSubmit}>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+      }}
+    >
+      <div className="flexbox-container">
         <div>
-          title
-          <input
-            id="title"
-            type="text"
-            value={newBlogTitle}
-            name="title"
-            placeholder="write here blog title"
-            onChange={handleBlogTitleChange}
-          />
+          <h2>Create a new blog</h2>
         </div>
         <div>
-          author
-          <input
-            id="author"
-            type="text"
-            value={newBlogAuthor}
-            name="author"
-            placeholder="write here blog author"
-            onChange={handleBlogAuthorChange}
-          />
+          <form onSubmit={onSubmit}>
+            <div>
+              title
+              <input
+                id="title"
+                type="text"
+                value={newBlogTitle}
+                name="title"
+                placeholder="write here blog title"
+                onChange={handleBlogTitleChange}
+              />
+            </div>
+            <div>
+              author
+              <input
+                id="author"
+                type="text"
+                value={newBlogAuthor}
+                name="author"
+                placeholder="write here blog author"
+                onChange={handleBlogAuthorChange}
+              />
+            </div>
+            <div>
+              url
+              <input
+                id="url"
+                type="text"
+                value={newBlogUrl}
+                name="url"
+                placeholder="write here blog url"
+                onChange={handleBlogUrlChange}
+              />
+            </div>
+            <Button type="submit" variant="info">
+              save
+            </Button>
+          </form>
         </div>
-        <div>
-          url
-          <input
-            id="url"
-            type="text"
-            value={newBlogUrl}
-            name="url"
-            placeholder="write here blog url"
-            onChange={handleBlogUrlChange}
-          />
-        </div>
-        <button type="submit">save</button>
-      </form>
+      </div>
     </div>
   )
 }

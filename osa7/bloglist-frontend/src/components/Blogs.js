@@ -1,21 +1,16 @@
-import { useSelector } from 'react-redux'
-import Blog from '../components/Blog'
-
-const Blogs = () => {
-  const blogs = useSelector(({ blogs }) => {
-    return blogs
-  })
-
-  return (
-    <div>
-      <h2>Blogs</h2>
-      <ul>
-        {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
-      </ul>
-    </div>
-  )
-}
+const Blogs = ({ blogs, Link }) => (
+  <div>
+    <h2>Blogs</h2>
+    <ul>
+      {blogs.map((blog) => (
+        <li key={blog.id}>
+          <Link to={`/blogs/${blog.id}`}>
+            {blog.title} by {blog.author}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </div>
+)
 
 export default Blogs

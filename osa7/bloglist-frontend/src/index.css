@@ -1,9 +1,11 @@
 
 
   h2 {
-    color: rgb(2, 2, 2);
+    color: rgb(10, 55, 238);
   }
-
+  h1 {
+    color: rgb(10, 55, 238);
+  }
   ul {
     color: rgb(9, 9, 9);
     padding-top: 3px;
@@ -30,3 +32,4 @@
     margin-bottom: 10px;
   }
 
+ 
